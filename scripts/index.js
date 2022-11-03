@@ -17,6 +17,10 @@ const inputPutId = document.getElementById("inputPutId")
 const modificar = document.getElementById("btnPut")
 const save = document.getElementById("btnSendChanges")
 
+
+const inputDelete = document.getElementById("inputDelete")
+const btnDelete = document.getElementById("btnDelete")
+
  async function getDatos(){
 const obtenerDatos = await getJSONData(url);
 console.log(obtenerDatos.data)
@@ -57,6 +61,12 @@ lastName.addEventListener("change",()=>{
   }else{ btnPost.disabled = false}
 })
 
+inputDelete.addEventListener("change",()=>{
+  if(!inputDelete.value){
+    btnDelete.disabled = true
+  }else{ btnDelete.disabled = false}
+})
+
 
 modificar.addEventListener("click",async ()=>{
   if(inputPutId.value){
@@ -80,6 +90,14 @@ function mostrarDatos(){
     createMensages(obtenerDatos.data[i].id,obtenerDatos.data[i].name,obtenerDatos.data[i].lastname)
   }
 }
+
+btnDelete.addEventListener("click", ()=>{
+results.innerHTML = " "
+const borrar = deleteJSONData(url +"/"+ inputDelete.value)
+mostrarDatos()
+
+})
+
 
 
 }
@@ -160,7 +178,7 @@ let putJSONData = function(url,name,lastname){
  
 let deleteJSONData = function(url){
   let result = {};
-  return fetch(url,{method: "DELETE"})
+  return fetch(url,{method: "delete"})
   .then(response => {
     if (response.ok) {
       return response.json();
