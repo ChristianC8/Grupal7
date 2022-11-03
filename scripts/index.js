@@ -9,12 +9,14 @@ const obtenerDatos = await getJSONData(url);
 console.log(obtenerDatos.data)
 
 btnReg.addEventListener("click",()=>{
-  
+  results.innerHTML = " "
   console.log(obtenerDatos.data)
   if(!inputReg.value){
-    for(let i = 0; i < obtenerDatos.data.lenght; i++){
-      console.log(i)
+    for(let i = 0; i < obtenerDatos.data.length; i++){
+      createMensages(obtenerDatos.data[i].id,obtenerDatos.data[i].name,obtenerDatos.data[i].lastname)
     }
+  }else{
+    createMensages(obtenerDatos.data[inputReg.value -1 ].id,obtenerDatos.data[inputReg.value -1].name,obtenerDatos.data[inputReg.value -1].lastname)
   } 
 
 
@@ -121,11 +123,8 @@ let deleteJSONData = function(url){
 
 
 getDatos()
-const data = getDatos()
 
-/* console.log(getDatos()) */
 
-createMensages("1","jose","rodolfo")
 
 
 function createMensages(id,Nname,lastname){
