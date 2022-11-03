@@ -4,8 +4,8 @@ const results = document.getElementById("results")
 const inputReg = document.getElementById("inputGet1Id")
 const btnReg = document.getElementById("btnGet1")
 
-let newName = document.getElementById("inputPostNombre").value
-let lastName = document.getElementById("inputPostApellido").value
+let newName = document.getElementById("inputPostNombre")
+let lastName = document.getElementById("inputPostApellido")
 
 
 
@@ -62,11 +62,15 @@ let getJSONData = function(url){
 let postJSONData = function(url){
   let result = {};
   return fetch(url,{
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
     method: "POST",
-    body : { 
-      name : newName,
-      lastName : lastName
-    }
+    body : JSON.stringify({ 
+      name : newName.value,
+      lastname : lastName.value
+    })
   })
   .then(response => {
     if (response.ok) {
