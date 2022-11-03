@@ -4,6 +4,12 @@ const results = document.getElementById("results")
 const inputReg = document.getElementById("inputGet1Id")
 const btnReg = document.getElementById("btnGet1")
 
+let newName = document.getElementById("inputPostNombre").value
+let lastName = document.getElementById("inputPostApellido").value
+
+
+
+
  async function getDatos(){
 const obtenerDatos = await getJSONData(url);
 console.log(obtenerDatos.data)
@@ -18,10 +24,11 @@ btnReg.addEventListener("click",()=>{
   }else{
     createMensages(obtenerDatos.data[inputReg.value -1 ].id,obtenerDatos.data[inputReg.value -1].name,obtenerDatos.data[inputReg.value -1].lastname)
   } 
-
-
 })
-
+btnPost.addEventListener("click",()=>{
+  let posting = postJSONData(url)
+})
+console.log(obtenerDatos.data)
 
 }
 
@@ -54,7 +61,13 @@ let getJSONData = function(url){
 
 let postJSONData = function(url){
   let result = {};
-  return fetch(url,{method: "POST"})
+  return fetch(url,{
+    method: "POST",
+    body : { 
+      name : newName,
+      lastName : lastName
+    }
+  })
   .then(response => {
     if (response.ok) {
       return response.json();
