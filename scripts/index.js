@@ -7,6 +7,7 @@ const results = document.getElementById("results")
 const inputReg = document.getElementById("inputGet1Id")
 const btnReg = document.getElementById("btnGet1")
 
+const btnPost = document.getElementById("btnPost")
 let newName = document.getElementById("inputPostNombre")
 let lastName = document.getElementById("inputPostApellido")
 
@@ -33,7 +34,10 @@ btnReg.addEventListener("click",()=>{
 })
 btnPost.addEventListener("click",()=>{
   let posting = postJSONData(url,newName,lastName)
+  mostrarDatos()
 })
+
+
 console.log(obtenerDatos.data)
 
 inputPutId.addEventListener("change",()=>{
@@ -42,6 +46,16 @@ inputPutId.addEventListener("change",()=>{
   }else{ modificar.disabled = false}
 })
 
+newName.addEventListener("change",()=>{
+  if(!newName.value){
+    btnPost.disabled = true
+  }else{ btnPost.disabled = false}
+})
+lastName.addEventListener("change",()=>{
+  if(!lastName.value){
+    btnPost.disabled = true
+  }else{ btnPost.disabled = false}
+})
 
 
 modificar.addEventListener("click",async ()=>{
@@ -54,17 +68,22 @@ modificar.addEventListener("click",async ()=>{
 
 }
 save.addEventListener("click",()=>{
-  let postingModify = putJSONData(url+"/"+inputPutId.value,inputPutN.value,inputPutApellido.value)
+  let postingModify = putJSONData(url+"/"+inputPutId.value,inputPutN,inputPutApellido)
   console.log(url+"/"+inputPutId.value)
 })
 
 })
 
 
-
+function mostrarDatos(){
+  for(let i = 0; i < obtenerDatos.data.length; i++){
+    createMensages(obtenerDatos.data[i].id,obtenerDatos.data[i].name,obtenerDatos.data[i].lastname)
+  }
+}
 
 
 }
+
 
 
 
