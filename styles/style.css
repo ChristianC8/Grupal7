@@ -28,12 +28,32 @@
     width: 50%;
     left: 50%;
     transform: translate(-50%, 0);
+    transition: .2s ease-in;
+
 }
 
 main {
     min-height: calc(100vh - 210px);
-  }
+}
 
-.mensaje{
-    margin-left: 10px;
+.inactive{
+    visibility: hidden;
+    opacity: 0;
+    
+}
+
+
+.active{
+    animation: error .2s ease both;
+}
+
+@keyframes error {
+    0%{
+        visibility: visible;
+        opacity: 1;
+    }
+    100%{
+        visibility: visible;
+        opacity: 1;
+    }
 }

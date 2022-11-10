@@ -1,261 +1,244 @@
-const url = "https://63639dcf37f2167d6f7e0a7a.mockapi.io/users"
+const results = document.getElementById('results')
 
+let url = ''
 
+const btnGet1 = document.getElementById('btnGet1')
+const inputSearchid = document.getElementById('inputGet1Id')
 
+// this function disables a button if the value of an input is empty
+function disabledButtons(inp, btn){
+    inp.addEventListener('input', ()=>{
+        if (!inp.value){
+            btn.disabled = true
+        } else {
+            btn.disabled = false
+        }
+    })
+}
 
-const results = document.getElementById("results")
-const inputReg = document.getElementById("inputGet1Id")
-const btnReg = document.getElementById("btnGet1")
+// alert function
+const alert = document.querySelector('.alert')
+function showError(){
+    alert.classList.remove('inactive')
+    alert.classList.add('acitve')
 
-const btnPost = document.getElementById("btnPost")
-let newName = document.getElementById("inputPostNombre")
-let lastName = document.getElementById("inputPostApellido")
+    setTimeout(()=>{
+        alert.classList.remove('acitve')
+        alert.classList.add('inactive')
+    }, 3000)
+}
 
-const inputPutN = document.getElementById("inputPutNombre")
-const inputPutApellido = document.getElementById("inputPutApellido")
-const inputPutId = document.getElementById("inputPutId")
-const modificar = document.getElementById("btnPut")
-const save = document.getElementById("btnSendChanges")
+// this function disables a button if the value of two inputs is empty
+function disabledButtonsFormControl(container, input1, input2, btn){
+    for (const input of container){
+        if(input.className.includes('form-control')){
+            input.addEventListener('input', ()=>{
+                if (!input1.value || !input2.value){ return btn.disabled = true} 
 
-
-const inputDelete = document.getElementById("inputDelete")
-const btnDelete = document.getElementById("btnDelete")
-
- async function getDatos(){
-const obtenerDatos = await getJSONData(url);
-console.log(obtenerDatos.data)
-/* buscar */
-btnReg.addEventListener("click",()=>{
-  results.innerHTML = " "
-  console.log(obtenerDatos.data)
-  if(!inputReg.value){
-    for(let i = 0; i < obtenerDatos.data.length; i++){
-      createMensages(obtenerDatos.data[i].id,obtenerDatos.data[i].name,obtenerDatos.data[i].lastname)
+                return btn.disabled = false
+            })
+        }
     }
-  }else{
-    createMensages(obtenerDatos.data[inputReg.value -1 ].id,obtenerDatos.data[inputReg.value -1].name,obtenerDatos.data[inputReg.value -1].lastname)
-  } 
-})
-/* fin buscar */
-
-/* agregar */
-btnPost.addEventListener("click",()=>{
-  let posting = postJSONData(url,newName,lastName)
-  mostrarDatos()
-})
-/* fin agregar */
-
-console.log(obtenerDatos.data)
-/* cambiar los botones de disabled a no disabled */
-inputPutId.addEventListener("change",()=>{
-  if(!inputPutId.value){
-    modificar.disabled = true
-  }else{ modificar.disabled = false}
-  if(obtenerDatos.data[inputPutId.value] == undefined){
-    modificar.setAttribute("data-bs-target"," ")
-  }else{ modificar.setAttribute("data-bs-target","#dataModal")}
-})
-
-newName.addEventListener("change",()=>{
-  if(!newName.value){
-    btnPost.disabled = true
-  }else{ btnPost.disabled = false}
-})
-lastName.addEventListener("change",()=>{
-  if(!lastName.value){
-    btnPost.disabled = true
-  }else{ btnPost.disabled = false}
-})
-
-inputDelete.addEventListener("change",()=>{
-  if(!inputDelete.value){
-    btnDelete.disabled = true
-  }else{ btnDelete.disabled = false}
-})
-
-
-/* modificar */
-modificar.addEventListener("click",async ()=>{
-
-
-
-  if(obtenerDatos.data[inputPutId.value] != undefined){
-  const modificarValues = await getJSONData(url +"/"+ inputPutId.value)
-    console.log(modificarValues)
-  
-  inputPutN.value =  modificarValues.data.name
-  inputPutApellido.value =  modificarValues.data.lastname
-
-
-
-
-}else{
-  
-}
-save.addEventListener("click",()=>{
-  let postingModify = putJSONData(url+"/"+inputPutId.value,inputPutN,inputPutApellido)
-  console.log(url+"/"+inputPutId.value)
-})
-
-})
-/* fin modificar */
-
-
-
-
-
-/* borrar */
-btnDelete.addEventListener("click", ()=>{
-results.innerHTML = " "
-const borrar = deleteJSONData(url +"/"+ inputDelete.value)
-mostrarDatos()
-
-})
-
-
-
 }
 
-/* fin borrar */
+let dataList;
 
+// get data function
+function getData(){
+    url = 'https://63612cf467d3b7a0a6c01fae.mockapi.io/users/'
 
-
-
-
-let getJSONData = function(url){
-    let result = {};
-    return fetch(url)
+    fetch(url)
     .then(response => {
-      if (response.ok) {
-        return response.json();
+        if (response.ok) {
+            return response.json();
+            
+          }else{
+            throw Error(response.statusText);
+          }
+    })
+    .then(data => {
+        dataList = data
+        let appendToHtml = ''
         
-      }else{
-        throw Error(response.statusText);
-      }
+        for (const list of data){
+            appendToHtml += `
+            <div class="p-3 list-unstyled">
+                <li>ID: ${list.id}</li>
+                <li>NAME: ${list.name}</li>
+                <li>LASTNAME: ${list.lastname}</li>
+            </div>
+            `
+        }
+
+        results.innerHTML = appendToHtml
     })
-    .then(function(response) {
-          result.status = 'ok';
-          result.data = response;
-          return result;
-    })
-    .catch(function(error) {
-        result.status = 'error';
-        result.data = error;
-        return result;
-    });
-} 
-
-let postJSONData = function(url,name,lastname){
-  return fetch(url,{
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    method: "POST",
-    body : JSON.stringify({ 
-      name : name.value,
-      lastname : lastname.value
-    })
-  })
-} 
-let putJSONData = function(url,name,lastname){
-  let result = {};
-  return fetch(url,{
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    method: "PUT",
-    body : JSON.stringify({ 
-      name : name.value,
-      lastname : lastname.value
-    })}
-    )
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-      
-    }else{
-      throw Error(response.statusText);
-    }
-  })
-  .then(function(response) {
-        result.status = 'ok';
-        result.data = response;
-        return result;
-  })
-  .catch(function(error) {
-      result.status = 'error';
-      result.data = error;
-      return result;
-  });
-} 
- 
-let deleteJSONData = function(url){
-  let result = {};
-  return fetch(url,{method: "delete"})
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-      
-    }else{
-      throw Error(response.statusText);
-    }
-  })
-  .then(function(response) {
-        result.status = 'ok';
-        result.data = response;
-        return result;
-  })
-  .catch(function(error) {
-      result.status = 'error';
-      result.data = error;
-      return result;
-  });
-} 
-
-
-
-
-
-
-getDatos()
-
-
-
-
-
-function createMensages(id,Nname,lastname){
-  const idName = document.createElement("li")
-  idName.innerHTML = "ID: "+id
-  idName.classList.add("mensaje")
-  results.appendChild(idName)
-  const name = document.createElement("li")
-  name.innerHTML = "Name: "+ Nname
-  name.classList.add("mensaje")
-  results.appendChild(name)
-  const lastnam = document.createElement("li")
-  lastnam.innerHTML = "LastName: "+lastname
-  lastnam.classList.add("mensaje")  
-  results.appendChild(lastnam)
-
 }
 
 
 
+// get data by id function
+function getDataByID(){        
+    btnGet1.addEventListener('click', ()=>{
+        if(inputSearchid.value !== ''){
+            url = `https://63612cf467d3b7a0a6c01fae.mockapi.io/users/${inputSearchid.value}`
 
-async function mostrarDatos(){
-  const Datos = await getJSONData(url);
+            fetch(url)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                  }
+            })
+            .then(data => {
+                let appendToHtml = ''
+                if(data !== undefined){
+                    appendToHtml = `
+                        <div class="p-3 list-unstyled">
+                            <li>ID: ${data.id}</li>
+                            <li>NAME: ${data.name}</li>
+                            <li>LASTNAME: ${data.lastname}</li>
+                        </div>
+                    `
+                } else{
+                    showError()
+                }
+
+                inputSearchid.value = ''
+                results.innerHTML = appendToHtml
+            })
+
+        } else {
+            getData()
+        }
+    })
+}
+
+// post data function
+const inputPostName = document.getElementById('inputPostNombre')
+const inputPostLastName = document.getElementById('inputPostApellido')
+const btnPost = document.getElementById('btnPost')
+const postBox = document.getElementById('post-box').children
+
+function postData(){
+
     
-    if(!inputReg.value){
-      for(let i = 0; i < Datos.data.length; i++){
-        createMensages(Datos.data[i].id,Datos.data[i].name,Datos.data[i].lastname)
-      }
-    }else{
-      createMensages(Datos.data[inputReg.value -1 ].id,Datos.data[inputReg.value -1].name,Datos.data[inputReg.value -1].lastname)
-    } 
-  }
-  
-  function clearMessages(){
-    results.innerHTML = " "
-  }
+    disabledButtonsFormControl(postBox, inputPostLastName, inputPostName, btnPost)
+
+    btnPost.addEventListener('click', ()=>{
+        if(inputPostLastName !== '' && inputPostName !== ''){
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: inputPostName.value,
+                    lastname: inputPostLastName.value
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+             .then(response => {if(response.ok){
+                response.json()
+             }
+             })
+             .then(data =>{ 
+                inputPostName.value = ''
+                inputPostLastName.value = ''
+                getData()
+            })
+        }
+    })
+}
+
+// put data function
+const btnPut = document.getElementById('btnPut')
+const inputPutName = document.getElementById('inputPutNombre')
+const inputPutLastName = document.getElementById('inputPutApellido')
+const inputPutId = document.getElementById('inputPutId')
+const btnSendChanges = document.getElementById('btnSendChanges')
+const modalBody = document.getElementById('modalBody').children
+
+function putData(){
+    disabledButtonsFormControl(modalBody, inputPutLastName, inputPutName, btnSendChanges)
+
+    inputPutId.addEventListener('input', ()=>{
+        let result = dataList.find(elem => elem.id === inputPutId.value)
+
+        if (!inputPutId.value || result === undefined){
+            btnPut.disabled = true
+        } else {
+            btnPut.disabled = false
+        }
+    })
+
+    btnPut.addEventListener('click', (e)=>{
+        url = `https://63612cf467d3b7a0a6c01fae.mockapi.io/users/${inputPutId.value}`
+
+        fetch(url).then(response => {if(response.ok){return response.json()}}).then(data => {
+            if(data !== undefined){
+                inputPutName.value = data.name
+                inputPutLastName.value = data.lastname
+            } else {
+                inputPutName.value = ''
+                inputPutLastName.value = ''
+            }
+
+        })
+    })
+    
+    btnSendChanges.addEventListener('click', () => {
+        if (inputPutName.value && inputPutLastName.value){
+            url = `https://63612cf467d3b7a0a6c01fae.mockapi.io/users/${inputPutId.value}`
+
+            fetch(url, {
+                method: 'PUT',
+                body: JSON.stringify({
+                    name: inputPutName.value,
+                    lastname: inputPutLastName.value
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                getData()
+                inputPutId.value = ''
+            })
+        }
+    })
+}
+
+// delete data function
+const inputDelete = document.getElementById('inputDelete')
+const btnDelete = document.getElementById('btnDelete')
+
+function deleteData(){
+
+    disabledButtons(inputDelete, btnDelete)
+
+    btnDelete.addEventListener('click', ()=>{
+        url = `https://63612cf467d3b7a0a6c01fae.mockapi.io/users/${inputDelete.value}`
+
+        fetch(url, {
+            method: 'delete',
+        })
+        .then(response => {
+            if(!response.ok) showError()
+            response.json()
+        })
+        .then(data => {
+            getData()
+            inputDelete.value = ''
+        })
+    })
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+    // diferent methods
+    getData()
+    getDataByID()
+    postData()
+    putData()
+    deleteData()
+})

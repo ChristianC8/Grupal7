@@ -23,7 +23,7 @@
                     <div class="col-md-6">
                         <div class="border p-3 my-3 position-relative" id="get-box">
                             <h6>Buscar registro</h6>
-                            <input type="number" id="inputGet1Id" class="form-control" placeholder="ID a buscar">
+                            <input type="number" id="inputGet1Id" min="1" class="form-control" placeholder="ID a buscar">
                             <button id="btnGet1" class="btn btn-primary position-absolute bottom-0 mb-3">Buscar</button>
                         </div>
                     </div>
@@ -32,8 +32,7 @@
                             <h6>Ingresar nuevo registro</h6>
                             <input type="text" id="inputPostNombre" class="form-control my-1" placeholder="Nombre">
                             <input type="text" id="inputPostApellido" class="form-control my-1" placeholder="Apellido">
-                            <button id="btnPost" class="btn btn-success position-absolute bottom-0 mb-3" disabled>
-                                Agregar</button>
+                            <button id="btnPost" class="btn btn-success position-absolute bottom-0 mb-3" disabled>Agregar</button>
                         </div>
                     </div>
                 </div>
@@ -41,16 +40,34 @@
                     <div class="col-md-6">
                         <div class="border p-3 my-3 position-relative" id="put-box">
                             <h6>Modificar registro</h6>
-                            <input type="number" id="inputPutId" class="form-control"
-                                placeholder="ID del registro a modificar"  min="1">
+                            <input type="number" id="inputPutId" min="1" class="form-control"
+                                placeholder="ID del registro a modificar">
+                            <!-- Modal btn -->
                             <button id="btnPut" class="btn btn-warning position-absolute bottom-0 mb-3" data-bs-toggle="modal" data-bs-target="#dataModal" disabled>
                                 Modificar</button>
+                            <!-- Modal -->
+                            <div class="modal fade" tabindex="-1" id="dataModal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body" id="modalBody">
+                                            <label for="inputPutNombre">Nombre:</label>
+                                            <input type="text" id="inputPutNombre" class="form-control my-1">
+                                            <label for="inputPutApellido">Apellido:</label>
+                                            <input type="text" id="inputPutApellido" class="form-control my-1">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="button" class="btn btn-primary" id="btnSendChanges" disabled data-bs-dismiss="modal">Guardar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="border p-3 my-3 position-relative" id="delete-box">
                             <h6>Eliminar registro</h6>
-                            <input type="number" id="inputDelete" class="form-control" placeholder="ID a eliminar">
+                            <input type="number" id="inputDelete" min="1" class="form-control" placeholder="ID a eliminar">
                             <button id="btnDelete" class="btn btn-danger position-absolute bottom-0 mb-3" disabled>
                                 Borrar</button>
                         </div>
@@ -67,28 +84,11 @@
                 Programar</a> - 2022</p>
         <p class="mb-1">Generado con fines estrictamente educativos.</p>
     </footer>
-    <div class="alert alert-danger fade" id="alert-error" role="alert">
-        Algo salió mal...
-    </div>
-    <div class="modal fade" tabindex="-1" id="dataModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <label for="inputPutNombre">Nombre:</label>
-                    <input type="text" id="inputPutNombre" class="form-control my-1">
-                    <label for="inputPutApellido">Apellido:</label>
-                    <input type="text" id="inputPutApellido" class="form-control my-1">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="btnSendChanges" data-bs-dismiss="modal" >Guardar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="scripts/index.js"></script>
+    <div class="alert alert-danger inactive" role="alert">
+        Algo salio mal...
+      </div>
     <script src="scripts/bootstrap.bundle.js"></script>
+    <script src="scripts/script.js"></script>
 </body>
 
 </html>
