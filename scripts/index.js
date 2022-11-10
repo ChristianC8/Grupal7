@@ -51,6 +51,9 @@ inputPutId.addEventListener("change",()=>{
   if(!inputPutId.value){
     modificar.disabled = true
   }else{ modificar.disabled = false}
+  if(obtenerDatos.data[inputPutId.value] == undefined){
+    modificar.setAttribute("data-bs-target"," ")
+  }else{ modificar.setAttribute("data-bs-target","#dataModal")}
 })
 
 newName.addEventListener("change",()=>{
@@ -73,16 +76,22 @@ inputDelete.addEventListener("change",()=>{
 
 /* modificar */
 modificar.addEventListener("click",async ()=>{
-  let numero = inputPutId.value
+
+
 
   if(obtenerDatos.data[inputPutId.value] != undefined){
   const modificarValues = await getJSONData(url +"/"+ inputPutId.value)
     console.log(modificarValues)
+  
   inputPutN.value =  modificarValues.data.name
   inputPutApellido.value =  modificarValues.data.lastname
-  
 
-}else{}
+
+
+
+}else{
+  
+}
 save.addEventListener("click",()=>{
   let postingModify = putJSONData(url+"/"+inputPutId.value,inputPutN,inputPutApellido)
   console.log(url+"/"+inputPutId.value)
