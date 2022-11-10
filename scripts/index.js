@@ -24,7 +24,7 @@ const btnDelete = document.getElementById("btnDelete")
  async function getDatos(){
 const obtenerDatos = await getJSONData(url);
 console.log(obtenerDatos.data)
-
+/* buscar */
 btnReg.addEventListener("click",()=>{
   results.innerHTML = " "
   console.log(obtenerDatos.data)
@@ -36,14 +36,17 @@ btnReg.addEventListener("click",()=>{
     createMensages(obtenerDatos.data[inputReg.value -1 ].id,obtenerDatos.data[inputReg.value -1].name,obtenerDatos.data[inputReg.value -1].lastname)
   } 
 })
+/* fin buscar */
+
+/* agregar */
 btnPost.addEventListener("click",()=>{
   let posting = postJSONData(url,newName,lastName)
   mostrarDatos()
 })
-
+/* fin agregar */
 
 console.log(obtenerDatos.data)
-
+/* cambiar los botones de disabled a no disabled */
 inputPutId.addEventListener("change",()=>{
   if(!inputPutId.value){
     modificar.disabled = true
@@ -68,29 +71,31 @@ inputDelete.addEventListener("change",()=>{
 })
 
 
+/* modificar */
 modificar.addEventListener("click",async ()=>{
-  if(inputPutId.value){
+  let numero = inputPutId.value
+
+  if(obtenerDatos.data[inputPutId.value] != undefined){
   const modificarValues = await getJSONData(url +"/"+ inputPutId.value)
     console.log(modificarValues)
   inputPutN.value =  modificarValues.data.name
   inputPutApellido.value =  modificarValues.data.lastname
   
 
-}
+}else{}
 save.addEventListener("click",()=>{
   let postingModify = putJSONData(url+"/"+inputPutId.value,inputPutN,inputPutApellido)
   console.log(url+"/"+inputPutId.value)
 })
 
 })
+/* fin modificar */
 
 
-function mostrarDatos(){
-  for(let i = 0; i < obtenerDatos.data.length; i++){
-    createMensages(obtenerDatos.data[i].id,obtenerDatos.data[i].name,obtenerDatos.data[i].lastname)
-  }
-}
 
+
+
+/* borrar */
 btnDelete.addEventListener("click", ()=>{
 results.innerHTML = " "
 const borrar = deleteJSONData(url +"/"+ inputDelete.value)
@@ -102,6 +107,7 @@ mostrarDatos()
 
 }
 
+/* fin borrar */
 
 
 
@@ -201,7 +207,11 @@ let deleteJSONData = function(url){
 
 
 
+
+
+
 getDatos()
+
 
 
 
@@ -223,3 +233,20 @@ function createMensages(id,Nname,lastname){
 }
 
 
+
+
+async function mostrarDatos(){
+  const Datos = await getJSONData(url);
+    
+    if(!inputReg.value){
+      for(let i = 0; i < Datos.data.length; i++){
+        createMensages(Datos.data[i].id,Datos.data[i].name,Datos.data[i].lastname)
+      }
+    }else{
+      createMensages(Datos.data[inputReg.value -1 ].id,Datos.data[inputReg.value -1].name,Datos.data[inputReg.value -1].lastname)
+    } 
+  }
+  
+  function clearMessages(){
+    results.innerHTML = " "
+  }
